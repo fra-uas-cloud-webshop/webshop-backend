@@ -1,4 +1,4 @@
-package de.frankfurtuas.cloud.webshop.Paymentservice.dto;
+package de.frankfurtuas.cloud.webshop.paymentmanagement.dto;
 
 public class PaymentResponse {
 
