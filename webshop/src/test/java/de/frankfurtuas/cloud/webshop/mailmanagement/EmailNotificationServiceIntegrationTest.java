@@ -1,4 +1,4 @@
-package de.frankfurtuas.cloud.webshop.mailservice;
+package de.frankfurtuas.cloud.webshop.mailmanagement;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package de.frankfurtuas.cloud.webshop.mailservice;
+package de.frankfurtuas.cloud.webshop.mailmanagement;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

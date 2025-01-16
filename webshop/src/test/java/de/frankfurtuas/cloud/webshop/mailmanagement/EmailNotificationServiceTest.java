@@ -1,9 +1,8 @@
-package de.frankfurtuas.cloud.webshop.mailservice;
+package de.frankfurtuas.cloud.webshop.mailmanagement;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.boot.test.context.SpringBootTest;
