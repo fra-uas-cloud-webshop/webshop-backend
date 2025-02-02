@@ -6,7 +6,8 @@ public class PaymentResponse {
 
     private String message;
 
-    public PaymentResponse() {}
+    public PaymentResponse() {
+    }
 
     public PaymentResponse(boolean success, String message) {
         this.success = success;

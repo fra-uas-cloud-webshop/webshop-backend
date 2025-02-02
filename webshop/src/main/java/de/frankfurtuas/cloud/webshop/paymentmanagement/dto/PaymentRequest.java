@@ -6,7 +6,8 @@ public class PaymentRequest {
 
     private double amount;
 
-    public PaymentRequest() {}
+    public PaymentRequest() {
+    }
 
     public PaymentRequest(String paymentMethod, double amount) {
         this.paymentMethod = paymentMethod;

@@ -1,12 +1,12 @@
 package de.frankfurtuas.cloud.webshop.productmanagement.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -15,13 +15,21 @@ public class Product {
 
     private double price;
 
-    public Product() {}
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    public Product(Long id, String name, String description, double price) {
+    private String category;
+
+    public Product() {
+    }
+
+    public Product(Long id, String name, String description, double price, String imageUrl, String category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.imageUrl = imageUrl;
+        this.category = category;
     }
 
     public Long getId() {
@@ -54,5 +62,21 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
