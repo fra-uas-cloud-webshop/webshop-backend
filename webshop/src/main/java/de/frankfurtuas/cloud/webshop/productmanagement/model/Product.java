@@ -1,9 +1,18 @@
 package de.frankfurtuas.cloud.webshop.productmanagement.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -15,44 +24,8 @@ public class Product {
 
     private double price;
 
-    public Product() {}
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    public Product(Long id, String name, String description, double price) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
+    private String category;
 }
