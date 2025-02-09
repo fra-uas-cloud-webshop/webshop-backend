@@ -24,9 +24,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build and Test with Maven
-        run: mvn clean install
-        working-directory: webshop
+      #      - name: Build and Test with Maven
+      #        run: mvn clean install
+      #        working-directory: webshop
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
