@@ -1,10 +1,9 @@
-version: '3.8'
-
 services:
   webshop-backend:
     build:
       context: ./webshop
       dockerfile: Dockerfile
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
@@ -15,13 +14,20 @@ services:
       SPRING_DATASOURCE_PASSWORD: root
 
   database:
-    image: postgres:15
+    image: postgres:latest
+    container_name: backend-db
+    restart: always
     environment:
+      POSTGRES_DB: webshop_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
     ports:
       - "5432:5432"
     volumes:
       - ./init:/docker-entrypoint-initdb.d  # Mount the init folder
-volumes:
-  postgres-data:
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres", "-d", "webshop_db" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
