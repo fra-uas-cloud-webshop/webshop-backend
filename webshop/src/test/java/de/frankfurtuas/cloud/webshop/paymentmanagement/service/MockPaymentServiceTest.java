@@ -3,8 +3,11 @@ package de.frankfurtuas.cloud.webshop.paymentmanagement.service;
 import de.frankfurtuas.cloud.webshop.paymentmanagement.dto.PaymentRequest;
 import de.frankfurtuas.cloud.webshop.paymentmanagement.dto.PaymentResponse;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.TestPropertySource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@TestPropertySource(locations = "classpath:application-test.properties")
 class MockPaymentServiceTest {
 
     private final PaymentService paymentService = new MockPaymentService();
