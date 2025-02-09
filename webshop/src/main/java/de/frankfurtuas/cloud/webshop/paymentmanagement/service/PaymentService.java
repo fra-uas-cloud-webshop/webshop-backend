@@ -6,5 +6,4 @@ import de.frankfurtuas.cloud.webshop.paymentmanagement.dto.PaymentResponse;
 public interface PaymentService {
 
     PaymentResponse processPayment(PaymentRequest request);
-
 }

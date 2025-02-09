@@ -3,7 +3,14 @@ package de.frankfurtuas.cloud.webshop.productmanagement.controller;
 import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import de.frankfurtuas.cloud.webshop.productmanagement.service.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,17 +37,19 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return product.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         Product updatedProduct = productService.updateProduct(id, product);
-        return updatedProduct != null ? ResponseEntity.ok(updatedProduct) : ResponseEntity.notFound().build();
+        return updatedProduct != null
+                ? ResponseEntity.ok(updatedProduct)
+                : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")

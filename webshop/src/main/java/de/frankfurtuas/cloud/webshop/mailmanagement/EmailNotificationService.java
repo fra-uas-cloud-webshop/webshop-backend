@@ -22,7 +22,8 @@ public class EmailNotificationService {
 
     public void sendShippingNotification(String toEmail, String trackingNumber) {
         String subject = "Shipping Notification - Tracking #" + trackingNumber;
-        String body = "Your order has been shipped! Use the tracking number " + trackingNumber + " to track your shipment.";
+        String body =
+                "Your order has been shipped! Use the tracking number " + trackingNumber + " to track your shipment.";
 
         sendEmail(toEmail, subject, body);
     }
