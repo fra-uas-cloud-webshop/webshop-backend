@@ -14,8 +14,8 @@ public class InventoryService {
     }
 
     public Product updateStock(Long productId, int newStock) {
-        Product product = inventoryRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        Product product =
+                inventoryRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
         product.setStock(newStock);
         return inventoryRepository.save(product);
     }
