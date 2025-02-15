@@ -1,16 +1,20 @@
-package de.frankfurtuas.cloud.webshop.productmanagement.model;
+package de.frankfurtuas.cloud.webshop.ordermanagement.model;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -19,24 +23,18 @@ import lombok.ToString;
 @Builder
 @ToString
 @Entity
-public class Product {
-
+@Table(name = "orders")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer stock;
+    private String customerName;
 
-    private String name;
+    private String customerEmail;
 
-    private String description;
+    private String status; // PENDING, SHIPPED, DELIVERED
 
-    private double price;
-
-    @Column(name = "image_url")
-    private String imageUrl;
-
-    private String category;
-
-    private Long quantity;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items;
 }
