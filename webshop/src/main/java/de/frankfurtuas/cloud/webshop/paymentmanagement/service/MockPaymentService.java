@@ -6,11 +6,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * The Mock Payment service.
+ */
 @Service
 public class MockPaymentService implements PaymentService {
 
     private static final Logger logger = LoggerFactory.getLogger(MockPaymentService.class);
 
+    /**
+     * Process payment.
+     *
+     * @param request the payment request
+     * @return the payment response
+     */
     @Override
     public PaymentResponse processPayment(PaymentRequest request) {
 
