@@ -1,6 +1,7 @@
 package de.frankfurtuas.cloud.webshop.ordermanagement.controller;
 
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.Order;
+import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderStatus;
 import de.frankfurtuas.cloud.webshop.ordermanagement.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,9 +25,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long id) {
-        Optional<Order> order = orderService.getOrderById(id);
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+        Optional<Order> order = orderService.getOrderById(orderId);
         return order.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -42,8 +42,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.placeOrder(order));
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, status));
+    @PutMapping("/{orderId}/status")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long orderId, @RequestBody OrderStatus status) {
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
+    }
+
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<Order> cancelOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.cancelOrder(orderId));
     }
 }
