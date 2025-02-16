@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -24,6 +26,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "order_items")
 public class OrderItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,5 +41,5 @@ public class OrderItem {
 
     private Integer quantity;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 }
