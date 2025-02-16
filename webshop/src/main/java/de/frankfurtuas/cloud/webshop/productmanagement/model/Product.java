@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
+/**
+ * The product entity.
+ */
 @Setter
 @Getter
 @AllArgsConstructor
@@ -25,13 +30,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer stock;
-
+    @Column(nullable = false)
     private String name;
 
     private String description;
 
-    private double price;
+    @Column(nullable = false)
+    private BigDecimal price;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -39,4 +44,6 @@ public class Product {
     private String category;
 
     private Long quantity;
+
+    private Integer stock;
 }
