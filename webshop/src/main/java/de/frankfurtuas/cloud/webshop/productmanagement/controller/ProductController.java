@@ -3,6 +3,7 @@ package de.frankfurtuas.cloud.webshop.productmanagement.controller;
 import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import de.frankfurtuas.cloud.webshop.productmanagement.service.ProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * The product controller.
  */
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/products")
 public class ProductController {
 
