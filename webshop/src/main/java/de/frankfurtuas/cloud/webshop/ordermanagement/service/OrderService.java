@@ -35,6 +35,10 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
+    public List<Order> getOrdersByCustomerEmail(String customerEmail) {
+        return orderRepository.findByCustomerEmailEqualsIgnoreCase(customerEmail);
+    }
+
     public Order placeOrder(Order order) {
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());

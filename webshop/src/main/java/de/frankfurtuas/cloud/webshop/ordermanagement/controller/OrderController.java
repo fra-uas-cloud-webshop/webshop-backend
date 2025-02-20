@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,6 +33,12 @@ public class OrderController {
         Optional<Order> order = orderService.getOrderById(orderId);
         return order.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/by-email")
+    public ResponseEntity<List<Order>> getOrdersByCustomerEmail(@RequestParam String email) {
+        List<Order> orders = orderService.getOrdersByCustomerEmail(email);
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping
