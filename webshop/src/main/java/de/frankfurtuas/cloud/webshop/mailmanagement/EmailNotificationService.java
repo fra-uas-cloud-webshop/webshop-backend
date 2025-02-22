@@ -3,6 +3,7 @@ package de.frankfurtuas.cloud.webshop.mailmanagement;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.Order;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderItem;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderStatus;
+import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,15 @@ public class EmailNotificationService {
         String body = buildOrderStatusEmail(order);
 
         sendEmail(order.getCustomerEmail(), subject, body);
+    }
+
+    public void sendLowStockAlert(Product product, Integer quantity) {
+        String subject = "Low Stock Alert - " + product.getName();
+        String body = "Attention!\n\nThe product '" + product.getName() + "' (ID: " + product.getId() + ") "
+                + "is running low on stock.\nCurrent stock: " + quantity + "\n"
+                + "Please consider restocking soon.";
+
+        sendEmail("fra.uas.cloud.webshop@gmail.com", subject, body);
     }
 
     private String buildOrderStatusEmail(Order order) {
