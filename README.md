@@ -10,6 +10,12 @@
 
 ## URLS
 
+IMPORTANT: The backend runs on port 8080 by default. If you are running the backend locally, you can access the backend
+at http://localhost:8080.
+**please check the http://localhost:8080/swagger-ui/index.html for the API documentation**
+
+@Ignore
+
 ### Product Management (/api/products)
 
 - Create Product: POST http://localhost:8080/api/products
