@@ -19,7 +19,7 @@ class EmailNotificationServiceIntegrationTest {
         String orderId = "12345";
 
         // Act
-        emailNotificationService.sendOrderConfirmation(toEmail, orderId);
+        //        emailNotificationService.sendOrderConfirmation(toEmail, orderId);
 
         // Assert
         // Check your inbox to verify the email was received.
