@@ -1,6 +1,7 @@
 package de.frankfurtuas.cloud.webshop.ordermanagement.controller;
 
 import de.frankfurtuas.cloud.webshop.common.controller.BaseController;
+import de.frankfurtuas.cloud.webshop.ordermanagement.dto.OrderDTO;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.Order;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderStatus;
 import de.frankfurtuas.cloud.webshop.ordermanagement.service.OrderService;
@@ -27,36 +28,38 @@ public class OrderController extends BaseController {
         this.orderService = orderService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
-        Optional<Order> order = orderService.getOrderById(orderId);
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
+        Optional<OrderDTO> order = orderService.getOrderById(orderId);
         return order.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/by-email")
-    public ResponseEntity<List<Order>> getOrdersByCustomerEmail(@RequestParam String email) {
-        List<Order> orders = orderService.getOrdersByCustomerEmail(email);
+    public ResponseEntity<List<OrderDTO>> getOrdersByCustomerEmail(@RequestParam String email) {
+        List<OrderDTO> orders = orderService.getOrdersByCustomerEmail(email);
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
-    }
 
     @PostMapping
-    public ResponseEntity<Order> placeOrder(@RequestBody Order order) {
+    public ResponseEntity<OrderDTO> placeOrder(@RequestBody Order order) {
         return ResponseEntity.ok(orderService.placeOrder(order));
     }
 
     @PutMapping("/status")
-    public ResponseEntity<Order> updateOrderStatus(@RequestParam Long orderId, @RequestBody OrderStatus status) {
+    public ResponseEntity<OrderDTO> updateOrderStatus(@RequestParam Long orderId, @RequestBody OrderStatus status) {
         return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
     }
 
     @PutMapping("/cancel")
-    public ResponseEntity<Order> cancelOrder(@RequestParam Long orderId) {
+    public ResponseEntity<OrderDTO> cancelOrder(@RequestParam Long orderId) {
         return ResponseEntity.ok(orderService.cancelOrder(orderId));
     }
 }

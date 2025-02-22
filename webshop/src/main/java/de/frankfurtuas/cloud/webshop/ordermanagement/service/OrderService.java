@@ -1,10 +1,12 @@
 package de.frankfurtuas.cloud.webshop.ordermanagement.service;
 
 import de.frankfurtuas.cloud.webshop.mailmanagement.EmailNotificationService;
+import de.frankfurtuas.cloud.webshop.ordermanagement.dto.OrderDTO;
+import de.frankfurtuas.cloud.webshop.ordermanagement.mapper.OrderMapper;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.Order;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderStatus;
+import de.frankfurtuas.cloud.webshop.ordermanagement.repository.OrderItemRepository;
 import de.frankfurtuas.cloud.webshop.ordermanagement.repository.OrderRepository;
-import de.frankfurtuas.cloud.webshop.paymentmanagement.service.PaymentService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,46 +17,62 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+
+    private final OrderItemRepository orderItemRepository;
+
     private final EmailNotificationService emailNotificationService;
-    private final PaymentService paymentService;
 
     public OrderService(
             OrderRepository orderRepository,
             EmailNotificationService emailNotificationService,
-            PaymentService paymentService) {
+            OrderItemRepository orderItemRepository) {
         this.orderRepository = orderRepository;
         this.emailNotificationService = emailNotificationService;
-        this.paymentService = paymentService;
+        this.orderItemRepository = orderItemRepository;
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return OrderMapper.toOrderDTOList(orders);
     }
 
-    public Optional<Order> getOrderById(Long id) {
-        return orderRepository.findById(id);
+    public Optional<OrderDTO> getOrderById(Long id) {
+        Order order = orderRepository.findById(id).orElse(null);
+        return Optional.ofNullable(OrderMapper.toOrderDTO(order));
     }
 
-    public List<Order> getOrdersByCustomerEmail(String customerEmail) {
-        return orderRepository.findByCustomerEmailEqualsIgnoreCase(customerEmail);
+    public List<OrderDTO> getOrdersByCustomerEmail(String customerEmail) {
+        List<Order> orders = orderRepository.findByCustomerEmailEqualsIgnoreCase(customerEmail);
+        return OrderMapper.toOrderDTOList(orders);
     }
 
-    public Order placeOrder(Order order) {
+    public OrderDTO placeOrder(Order order) {
+        System.out.println("OrderService.placeOrder");
+        System.out.println(order.getId());
+        System.out.println(order.getCustomerName());
+        System.out.println(order.getCustomerEmail());
+        System.out.println(order.getPaymentMethod());
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
-        return orderRepository.save(order);
+        orderItemRepository.saveAll(order.getItems());
+        orderRepository.save(order);
+        return OrderMapper.toOrderDTO(order);
     }
 
-    public Order updateOrderStatus(Long id, OrderStatus status) {
+    public OrderDTO updateOrderStatus(Long id, OrderStatus status) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
-        return orderRepository.save(order);
+        orderRepository.save(order);
+        emailNotificationService.sendOrderStatusEmail(order);
+        return OrderMapper.toOrderDTO(order);
     }
 
-    public Order cancelOrder(Long id) {
+    public OrderDTO cancelOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(OrderStatus.CANCELLED);
-        return orderRepository.save(order);
+        orderRepository.save(order);
+        emailNotificationService.sendOrderStatusEmail(order);
+        return OrderMapper.toOrderDTO(order);
     }
 }

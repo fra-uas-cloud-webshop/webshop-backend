@@ -12,5 +12,11 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    /**
+     * Find orders by customer email.
+     *
+     * @param customerEmail the customer email
+     * @return the list of orders
+     */
     List<Order> findByCustomerEmailEqualsIgnoreCase(String customerEmail);
 }
