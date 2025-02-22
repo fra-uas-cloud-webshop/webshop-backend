@@ -97,15 +97,15 @@ public class InventoryService {
                 .orElseThrow(() -> new InventoryNotFoundException("Inventory not found for product ID: " + productId));
 
         // Check if the new quantity is lower than the current quantity
-        if (newQuantity < inventory.getQuantity()) {
-            throw new IllegalArgumentException("New quantity cannot be lower than the existing quantity.");
+        if (newQuantity >= inventory.getQuantity()) {
+            throw new IllegalArgumentException("New quantity must be lower than the current quantity");
         }
 
-        inventory.setQuantity(newQuantity);
+        inventory.setQuantity(inventory.getQuantity() - newQuantity);
         inventoryRepository.save(inventory);
 
         // If quantity is low (e.g., less than 2), send a low stock alert email
-        if (newQuantity < 2) {
+        if (inventory.getQuantity() < 2) {
             emailNotificationService.sendLowStockAlert(inventory.getProduct(), newQuantity);
         }
     }
