@@ -41,12 +41,16 @@ public class Order {
 
     private String customerEmail;
 
+    private String phoneNumber;
+
     private String shippingAddress;
+
+    private String paymentMethod;
+
+    private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
-
-    private BigDecimal totalAmount;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;

@@ -41,5 +41,5 @@ public class OrderItem {
 
     private Integer quantity;
 
-    private BigDecimal totalPrice;
+    private BigDecimal totalPriceForItem;
 }
