@@ -44,4 +44,4 @@ at http://localhost:8080.
 
 ## Database
 
-![db.PNG](image/db.PNG)
+![db-v2.PNG](image/db-v2.PNG)
