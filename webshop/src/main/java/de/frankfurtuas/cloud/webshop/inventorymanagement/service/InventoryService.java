@@ -5,6 +5,7 @@ import de.frankfurtuas.cloud.webshop.inventorymanagement.dto.InventoryDTO;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.mapper.InventoryMapper;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.model.Inventory;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.repository.InventoryRepository;
+import de.frankfurtuas.cloud.webshop.mailmanagement.EmailNotificationService;
 import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,18 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
 
+    private final EmailNotificationService emailNotificationService;
+
     /**
      * Constructor.
      *
      * @param inventoryRepository the inventory repository
+     * @param emailNotificationService the email notification service
      */
-    public InventoryService(InventoryRepository inventoryRepository) {
+    public InventoryService(
+            InventoryRepository inventoryRepository, EmailNotificationService emailNotificationService) {
         this.inventoryRepository = inventoryRepository;
+        this.emailNotificationService = emailNotificationService;
     }
 
     /**
@@ -77,6 +83,31 @@ public class InventoryService {
         inventoryRepository.save(inventory);
 
         return InventoryMapper.toInventoryDTO(inventory);
+    }
+
+    /**
+     * Update the quantity of a product by product ID.
+     *
+     * @param productId   the product ID
+     * @param newQuantity the new quantity
+     */
+    public void updateQuantityByProductId(Long productId, Integer newQuantity) {
+        Inventory inventory = inventoryRepository
+                .findByProductId(productId)
+                .orElseThrow(() -> new InventoryNotFoundException("Inventory not found for product ID: " + productId));
+
+        // Check if the new quantity is lower than the current quantity
+        if (newQuantity < inventory.getQuantity()) {
+            throw new IllegalArgumentException("New quantity cannot be lower than the existing quantity.");
+        }
+
+        inventory.setQuantity(newQuantity);
+        inventoryRepository.save(inventory);
+
+        // If quantity is low (e.g., less than 2), send a low stock alert email
+        if (newQuantity < 2) {
+            emailNotificationService.sendLowStockAlert(inventory.getProduct(), newQuantity);
+        }
     }
 
     /**

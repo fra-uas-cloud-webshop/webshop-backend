@@ -1,9 +1,11 @@
 package de.frankfurtuas.cloud.webshop.ordermanagement.service;
 
+import de.frankfurtuas.cloud.webshop.inventorymanagement.service.InventoryService;
 import de.frankfurtuas.cloud.webshop.mailmanagement.EmailNotificationService;
 import de.frankfurtuas.cloud.webshop.ordermanagement.dto.OrderDTO;
 import de.frankfurtuas.cloud.webshop.ordermanagement.mapper.OrderMapper;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.Order;
+import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderItem;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderStatus;
 import de.frankfurtuas.cloud.webshop.ordermanagement.repository.OrderItemRepository;
 import de.frankfurtuas.cloud.webshop.ordermanagement.repository.OrderRepository;
@@ -22,13 +24,18 @@ public class OrderService {
 
     private final EmailNotificationService emailNotificationService;
 
+    private final InventoryService inventoryService;
+
     public OrderService(
             OrderRepository orderRepository,
+            InventoryService inventoryService,
             EmailNotificationService emailNotificationService,
             OrderItemRepository orderItemRepository) {
+
         this.orderRepository = orderRepository;
         this.emailNotificationService = emailNotificationService;
         this.orderItemRepository = orderItemRepository;
+        this.inventoryService = inventoryService;
     }
 
     public List<OrderDTO> getAllOrders() {
@@ -47,11 +54,6 @@ public class OrderService {
     }
 
     public OrderDTO placeOrder(Order order) {
-        System.out.println("OrderService.placeOrder");
-        System.out.println(order.getId());
-        System.out.println(order.getCustomerName());
-        System.out.println(order.getCustomerEmail());
-        System.out.println(order.getPaymentMethod());
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
@@ -64,6 +66,14 @@ public class OrderService {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
         orderRepository.save(order);
+
+        // If order is shipped, reduce stock for each product in the order
+        if (status == OrderStatus.SHIPPED) {
+            for (OrderItem item : order.getItems()) {
+                inventoryService.updateQuantityByProductId(item.getProduct().getId(), item.getQuantity());
+            }
+        }
+
         emailNotificationService.sendOrderStatusEmail(order);
         return OrderMapper.toOrderDTO(order);
     }
