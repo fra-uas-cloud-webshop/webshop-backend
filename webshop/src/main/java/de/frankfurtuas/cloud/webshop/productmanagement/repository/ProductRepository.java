@@ -27,4 +27,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      * @return the list of products
      */
     List<Product> findByName(String name);
+
+    /**
+     * Check if a product with the given name exists.
+     *
+     * @param name the name
+     * @return true if a product with the given name exists, false otherwise
+     */
+    boolean existsByName(String name);
 }
