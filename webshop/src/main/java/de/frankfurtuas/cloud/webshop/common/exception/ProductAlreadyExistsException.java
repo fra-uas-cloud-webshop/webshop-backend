@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Exception for when a product already exists.
  */
-@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Product with this name already exists")
+@ResponseStatus(value = HttpStatus.CONFLICT, reason = "Product with this name already exists")
 public class ProductAlreadyExistsException extends RuntimeException {
 
     /**
