@@ -2,7 +2,10 @@ package de.frankfurtuas.cloud.webshop.productmanagement.service;
 
 import de.frankfurtuas.cloud.webshop.common.exception.ProductAlreadyExistsException;
 import de.frankfurtuas.cloud.webshop.common.exception.ProductNotFoundException;
+import de.frankfurtuas.cloud.webshop.inventorymanagement.model.Inventory;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.service.InventoryService;
+import de.frankfurtuas.cloud.webshop.productmanagement.dto.ProductDTO;
+import de.frankfurtuas.cloud.webshop.productmanagement.mapper.ProductMapper;
 import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import de.frankfurtuas.cloud.webshop.productmanagement.repository.ProductRepository;
 import org.slf4j.Logger;
@@ -44,7 +47,7 @@ public class ProductService {
      * @param product the product to create
      * @return the created product
      */
-    public Product createProduct(Product product, Integer quantity) {
+    public ProductDTO createProduct(Product product, Integer quantity) {
         LOG.info("Creating a new product: {}", product);
 
         // Check if the product already exists
@@ -57,9 +60,10 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
 
         // Create the inventory for the new product
-        inventoryService.createInventory(savedProduct, quantity);
+        Inventory inventory = inventoryService.createInventory(savedProduct, quantity);
+        savedProduct.setInventory(inventory);
 
-        return savedProduct;
+        return ProductMapper.toProductDTO(savedProduct);
     }
 
     /**
@@ -67,8 +71,9 @@ public class ProductService {
      *
      * @return the list of products
      */
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDTO> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return ProductMapper.toProductDTOList(products);
     }
 
     /**
@@ -77,8 +82,9 @@ public class ProductService {
      * @param id the product id
      * @return the product if found, otherwise empty
      */
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public ProductDTO getProductById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        return ProductMapper.toProductDTO(product.get());
     }
 
     /**
@@ -87,8 +93,9 @@ public class ProductService {
      * @param name the product name
      * @return the product if found, otherwise empty
      */
-    public List<Product> getProductsByName(String name) {
-        return productRepository.findByName(name);
+    public List<ProductDTO> getProductsByName(String name) {
+        List<Product> products = productRepository.findByName(name);
+        return ProductMapper.toProductDTOList(products);
     }
 
     /**
@@ -97,8 +104,9 @@ public class ProductService {
      * @param category the product category
      * @return the list of products
      */
-    public List<Product> getProductsByCategory(String category) {
-        return productRepository.findByCategory(category);
+    public List<ProductDTO> getProductsByCategory(String category) {
+        List<Product> products = productRepository.findByCategory(category);
+        return ProductMapper.toProductDTOList(products);
     }
 
     /**
@@ -106,7 +114,6 @@ public class ProductService {
      *
      * @param productId the product id
      * @param updatedProduct the updated product
-     * @return the updated product if found, otherwise null
      */
     public void updateProduct(Long productId, Product updatedProduct) {
         productRepository

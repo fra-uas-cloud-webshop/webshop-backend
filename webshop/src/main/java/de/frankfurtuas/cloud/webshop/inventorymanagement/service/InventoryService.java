@@ -1,6 +1,8 @@
 package de.frankfurtuas.cloud.webshop.inventorymanagement.service;
 
 import de.frankfurtuas.cloud.webshop.common.exception.InventoryNotFoundException;
+import de.frankfurtuas.cloud.webshop.inventorymanagement.dto.InventoryDTO;
+import de.frankfurtuas.cloud.webshop.inventorymanagement.mapper.InventoryMapper;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.model.Inventory;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.repository.InventoryRepository;
 import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
@@ -37,8 +39,9 @@ public class InventoryService {
      *
      * @return the list of inventories
      */
-    public List<Inventory> getAllInventories() {
-        return inventoryRepository.findAll();
+    public List<InventoryDTO> getAllInventories() {
+        List<Inventory> inventories = inventoryRepository.findAll();
+        return InventoryMapper.toInventoryDTOList(inventories);
     }
 
     /**
@@ -46,14 +49,17 @@ public class InventoryService {
      *
      * @param product  the product
      * @param quantity the quantity
+     * @return the created inventory
      */
-    public void createInventory(Product product, Integer quantity) {
+    public Inventory createInventory(Product product, Integer quantity) {
         LOG.info("Creating inventory for product {} with quantity {}", product.getId(), quantity);
 
         Inventory inventory = new Inventory();
         inventory.setProduct(product);
         inventory.setQuantity(quantity);
         inventoryRepository.save(inventory);
+
+        return inventory;
     }
 
     /**
@@ -63,12 +69,14 @@ public class InventoryService {
      * @param newQuantity  the new quantity
      * @return the updated inventory
      */
-    public Inventory updateQuantity(Long inventoryId, Integer newQuantity) {
+    public InventoryDTO updateQuantity(Long inventoryId, Integer newQuantity) {
         Inventory inventory = inventoryRepository
                 .findById(inventoryId)
                 .orElseThrow(() -> new InventoryNotFoundException("Inventory not found"));
         inventory.setQuantity(newQuantity);
-        return inventoryRepository.save(inventory);
+        inventoryRepository.save(inventory);
+
+        return InventoryMapper.toInventoryDTO(inventory);
     }
 
     /**

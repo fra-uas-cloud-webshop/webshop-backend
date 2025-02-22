@@ -1,6 +1,7 @@
 package de.frankfurtuas.cloud.webshop.productmanagement.controller;
 
 import de.frankfurtuas.cloud.webshop.common.controller.BaseController;
+import de.frankfurtuas.cloud.webshop.productmanagement.dto.ProductDTO;
 import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import de.frankfurtuas.cloud.webshop.productmanagement.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +43,8 @@ public class ProductController extends BaseController {
      * @return the created product
      */
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product, @RequestParam Integer quantity) {
-        Product createdProduct = productService.createProduct(product, quantity);
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody Product product, @RequestParam Integer quantity) {
+        ProductDTO createdProduct = productService.createProduct(product, quantity);
         return ResponseEntity.ok(createdProduct);
     }
 
@@ -53,8 +54,8 @@ public class ProductController extends BaseController {
      * @return the list of products
      */
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
@@ -65,10 +66,9 @@ public class ProductController extends BaseController {
      * @return the product if found, otherwise not found
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        ProductDTO product = productService.getProductById(id);
+        return ResponseEntity.of(Optional.ofNullable(product));
     }
 
     /**
@@ -78,8 +78,8 @@ public class ProductController extends BaseController {
      * @return the list of products
      */
     @GetMapping("/by-name")
-    public ResponseEntity<List<Product>> searchProductsByName(@RequestParam String name) {
-        List<Product> products = productService.getProductsByName(name);
+    public ResponseEntity<List<ProductDTO>> searchProductsByName(@RequestParam String name) {
+        List<ProductDTO> products = productService.getProductsByName(name);
         return ResponseEntity.ok(products);
     }
 
@@ -90,8 +90,8 @@ public class ProductController extends BaseController {
      * @return the list of products
      */
     @GetMapping("/by-category")
-    public ResponseEntity<List<Product>> getProductsByCategory(@RequestParam String category) {
-        List<Product> products = productService.getProductsByCategory(category);
+    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@RequestParam String category) {
+        List<ProductDTO> products = productService.getProductsByCategory(category);
         return ResponseEntity.ok(products);
     }
 

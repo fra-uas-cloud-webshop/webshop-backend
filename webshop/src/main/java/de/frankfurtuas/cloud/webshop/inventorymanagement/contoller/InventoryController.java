@@ -1,7 +1,7 @@
 package de.frankfurtuas.cloud.webshop.inventorymanagement.contoller;
 
 import de.frankfurtuas.cloud.webshop.common.controller.BaseController;
-import de.frankfurtuas.cloud.webshop.inventorymanagement.model.Inventory;
+import de.frankfurtuas.cloud.webshop.inventorymanagement.dto.InventoryDTO;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.service.InventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +35,7 @@ public class InventoryController extends BaseController {
      * Get all inventories.
      */
     @GetMapping()
-    public ResponseEntity<List<Inventory>> getAllInventories() {
+    public ResponseEntity<List<InventoryDTO>> getAllInventories() {
         return ResponseEntity.ok(inventoryService.getAllInventories());
     }
 
@@ -46,7 +46,7 @@ public class InventoryController extends BaseController {
      * @param quantity the quantity
      */
     @PutMapping("/{inventoryId}")
-    public ResponseEntity<Inventory> updateQuantity(@PathVariable Long inventoryId, @RequestParam Integer quantity) {
+    public ResponseEntity<InventoryDTO> updateQuantity(@PathVariable Long inventoryId, @RequestParam Integer quantity) {
         return ResponseEntity.ok(inventoryService.updateQuantity(inventoryId, quantity));
     }
 }
