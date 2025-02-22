@@ -26,6 +26,7 @@ class ProductRepositoryTest {
         product.setName("Laptop");
         product.setDescription("High-end gaming laptop");
         product.setPrice(BigDecimal.valueOf(1500.0));
+        product.setImageUrl("https://example.com/image.jpg");
 
         productRepository.save(product);
 
@@ -47,11 +48,13 @@ class ProductRepositoryTest {
         product1.setName("Laptop");
         product1.setDescription("High-end gaming laptop");
         product1.setPrice(BigDecimal.valueOf(1500.0));
+        product1.setImageUrl("https://example.com/image.jpg");
 
         Product product2 = new Product();
         product2.setName("Xbox");
         product2.setDescription("With Fifa 25");
         product2.setPrice(BigDecimal.valueOf(500.0));
+        product2.setImageUrl("https://example.com/image.jpg");
 
         productRepository.save(product1);
         productRepository.save(product2);
@@ -76,6 +79,7 @@ class ProductRepositoryTest {
         product.setName("Laptop");
         product.setDescription("High-end gaming laptop");
         product.setPrice(BigDecimal.valueOf(1500.0));
+        product.setImageUrl("https://example.com/image.jpg");
 
         // Act
         Product savedProduct = productRepository.save(product);
@@ -94,6 +98,7 @@ class ProductRepositoryTest {
         product.setName("Keyboard");
         product.setDescription("Mechanical keyboard");
         product.setPrice(BigDecimal.valueOf(120.0));
+        product.setImageUrl("https://example.com/image.jpg");
 
         Product savedProduct = productRepository.save(product);
 
