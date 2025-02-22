@@ -1,4 +1,4 @@
-package de.frankfurtuas.cloud.webshop.productmanagement.exception;
+package de.frankfurtuas.cloud.webshop.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
