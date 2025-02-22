@@ -1,10 +1,13 @@
 package de.frankfurtuas.cloud.webshop.productmanagement.model;
 
+import de.frankfurtuas.cloud.webshop.inventorymanagement.model.Inventory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,17 +36,17 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @Column(length = 1000)
     private String description;
 
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     private String category;
 
-    private Long quantity;
-
-    private Integer stock;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Inventory inventory;
 }
