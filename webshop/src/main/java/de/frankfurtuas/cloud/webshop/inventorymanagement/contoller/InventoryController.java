@@ -1,28 +1,52 @@
 package de.frankfurtuas.cloud.webshop.inventorymanagement.contoller;
 
+import de.frankfurtuas.cloud.webshop.common.controller.BaseController;
+import de.frankfurtuas.cloud.webshop.inventorymanagement.model.Inventory;
 import de.frankfurtuas.cloud.webshop.inventorymanagement.service.InventoryService;
-import de.frankfurtuas.cloud.webshop.productmanagement.model.Product;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+/**
+ * The inventory controller.
+ */
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/inventory")
-public class InventoryController {
+public class InventoryController extends BaseController {
 
     private final InventoryService inventoryService;
 
+    /**
+     * Constructor.
+     *
+     * @param inventoryService the inventory service
+     */
     public InventoryController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
     }
 
-    @PutMapping("/{id}/stock")
-    public ResponseEntity<Product> updateStock(@PathVariable Long id, @RequestParam int stock) {
-        return ResponseEntity.ok(inventoryService.updateStock(id, stock));
+    /**
+     * Get all inventories.
+     */
+    @GetMapping()
+    public ResponseEntity<List<Inventory>> getAllInventories() {
+        return ResponseEntity.ok(inventoryService.getAllInventories());
+    }
+
+    /**
+     * Update the quantity of a product.
+     *
+     * @param inventoryId the inventory id
+     * @param quantity the quantity
+     */
+    @PutMapping("/{inventoryId}")
+    public ResponseEntity<Inventory> updateQuantity(@PathVariable Long inventoryId, @RequestParam Integer quantity) {
+        return ResponseEntity.ok(inventoryService.updateQuantity(inventoryId, quantity));
     }
 }
