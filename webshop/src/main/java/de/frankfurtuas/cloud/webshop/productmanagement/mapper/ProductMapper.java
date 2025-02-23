@@ -19,6 +19,7 @@ public class ProductMapper {
     public static List<ProductDTO> toProductDTOList(List<Product> products) {
         return products.stream()
                 .map(product -> new ProductDTO(
+                        product.getId(),
                         product.getName(),
                         product.getDescription(),
                         product.getPrice(),
@@ -36,6 +37,7 @@ public class ProductMapper {
      */
     public static ProductDTO toProductDTO(Product product) {
         return new ProductDTO(
+                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
