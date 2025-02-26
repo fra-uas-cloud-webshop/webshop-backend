@@ -93,9 +93,9 @@ public class ProductService {
      * @param name the product name
      * @return the product if found, otherwise empty
      */
-    public List<ProductDTO> getProductsByName(String name) {
-        List<Product> products = productRepository.findByName(name);
-        return ProductMapper.toProductDTOList(products);
+    public ProductDTO getProductByName(String name) {
+        Product products = productRepository.findByName(name);
+        return ProductMapper.toProductDTO(products);
     }
 
     /**

@@ -2,7 +2,6 @@ package de.frankfurtuas.cloud.webshop.ordermanagement.controller;
 
 import de.frankfurtuas.cloud.webshop.common.controller.BaseController;
 import de.frankfurtuas.cloud.webshop.ordermanagement.dto.OrderDTO;
-import de.frankfurtuas.cloud.webshop.ordermanagement.model.Order;
 import de.frankfurtuas.cloud.webshop.ordermanagement.model.OrderStatus;
 import de.frankfurtuas.cloud.webshop.ordermanagement.service.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,6 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
-    
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
         Optional<OrderDTO> order = orderService.getOrderById(orderId);
@@ -47,9 +45,8 @@ public class OrderController extends BaseController {
         return ResponseEntity.ok(orders);
     }
 
-
     @PostMapping
-    public ResponseEntity<OrderDTO> placeOrder(@RequestBody Order order) {
+    public ResponseEntity<OrderDTO> placeOrder(@RequestBody OrderDTO order) {
         return ResponseEntity.ok(orderService.placeOrder(order));
     }
 

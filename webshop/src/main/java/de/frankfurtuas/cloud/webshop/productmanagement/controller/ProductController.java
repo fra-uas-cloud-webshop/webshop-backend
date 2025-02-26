@@ -78,8 +78,8 @@ public class ProductController extends BaseController {
      * @return the list of products
      */
     @GetMapping("/by-name")
-    public ResponseEntity<List<ProductDTO>> searchProductsByName(@RequestParam String name) {
-        List<ProductDTO> products = productService.getProductsByName(name);
+    public ResponseEntity<ProductDTO> searchProductsByName(@RequestParam String name) {
+        ProductDTO products = productService.getProductByName(name);
         return ResponseEntity.ok(products);
     }
 
