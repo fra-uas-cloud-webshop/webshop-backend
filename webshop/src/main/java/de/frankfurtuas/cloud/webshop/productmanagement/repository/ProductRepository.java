@@ -21,12 +21,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategory(String category);
 
     /**
-     * Find products by name containing the given name.
+     * Find product by name containing the given name.
      *
      * @param name the name
-     * @return the list of products
+     * @return the product
      */
-    List<Product> findByName(String name);
+    Product findByName(String name);
 
     /**
      * Check if a product with the given name exists.

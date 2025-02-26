@@ -96,15 +96,14 @@ class ProductServiceTest {
         Inventory inventory = new Inventory(1L, product, 1);
         product.setInventory(inventory);
 
-        when(productRepository.findByName("Phone")).thenReturn(List.of(product));
+        when(productRepository.findByName("Phone")).thenReturn(product);
 
         // Act
-        List<ProductDTO> foundProduct = productService.getProductsByName("Phone");
+        ProductDTO foundProduct = productService.getProductByName("Phone");
 
         // Assert
         assertNotNull(foundProduct);
-        assertThat(foundProduct).hasSize(1);
-        assertThat(foundProduct.get(0).getName()).isEqualTo("Phone");
+        assertThat(foundProduct.getName()).isEqualTo("Phone");
         verify(productRepository, times(1)).findByName("Phone");
     }
 
