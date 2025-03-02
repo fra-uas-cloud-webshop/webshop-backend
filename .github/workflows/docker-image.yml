@@ -6,6 +6,16 @@ on:
   pull_request:
     branches: [ "*" ]
 
+env:
+  PROJECT_ID: dynamic-aurora-452119-a6
+  GAR_LOCATION: us-central1
+  REPO_NAME: docker-hub-webshop
+  IMAGE_NAME: webshop-backend
+  GKE_CLUSTER: autopilot-cluster-1-test
+  GKE_ZONE: us-central1
+  DEPLOYMENT_NAME: webshop-backend
+  CONTAINER_NAME: webshop-backend-sha256
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -24,39 +34,44 @@ jobs:
         run: mvn clean install
         working-directory: webshop
 
-  create-docker-image:
+  deploy:
+    name: Deploy to GKE
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Extract Version and Define Image Name
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           DATE=$(date +'%Y%m%d')
-          IMAGE_NAME="ghcr.io/${{ github.repository }}/webshop-backend-${VERSION}-${DATE}"
+          IMAGE_NAME="webshop-backend-${VERSION}-${DATE}"
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "DATE=$DATE" >> $GITHUB_ENV
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
         working-directory: webshop
 
-      - name: Build Docker Image
-        run: docker build -t ${{ env.IMAGE_NAME }} .
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker $GAR_LOCATION-docker.pkg.dev
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest .
+          docker push $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest
         working-directory: webshop
 
-      - name: Push Docker Image to GitHub Container Registry
-        run: docker push ${{ env.IMAGE_NAME }}
-        working-directory: webshop
+      - name: Configure Kubernetes Access
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
+
+      - name: Deploy to GKE
+        run: |
+          kubectl set image deployment/$DEPLOYMENT_NAME $CONTAINER_NAME=$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest
+          kubectl rollout status deployment/$DEPLOYMENT_NAME
