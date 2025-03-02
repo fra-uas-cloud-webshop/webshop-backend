@@ -70,6 +70,7 @@ jobs:
       - name: Configure Kubernetes Access
         run: |
           gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --project $PROJECT_ID
+          echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
 
       - name: Install GKE Auth Plugin
         run: |
