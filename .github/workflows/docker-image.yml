@@ -45,7 +45,7 @@ jobs:
       # Setup gcloud CLI
       - uses: google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
         with:
-          service_account_key: $PROJECT_ID
+          service_account_key: dynamic-aurora-452119-a6
           project_id: ${{ secrets.GKE_PROJECT }}
 
       - name: Extract Version and Define Image Name
